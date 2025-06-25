@@ -17,6 +17,7 @@ tiktoken = "*"
 [tool.poetry.group.dev.dependencies]
 pytest = "*"
 pytest-asyncio = "*"
+respx = "*"
 
 [build-system]
 requires = ["poetry-core"]
