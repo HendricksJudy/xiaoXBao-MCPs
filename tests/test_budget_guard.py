@@ -21,7 +21,11 @@ async def test_budget_guard(monkeypatch):
             return [M()]
 
     monkeypatch.setattr(metrics, "llm_daily_cost_usd", DummyGauge())
-    monkeypatch.setattr(budget_guard, "llm_daily_cost_usd", metrics.llm_daily_cost_usd)
+    monkeypatch.setattr(
+        budget_guard,
+        "llm_daily_cost_usd",
+        metrics.llm_daily_cost_usd,
+    )
     redis = DummyRedis()
     await budget_guard.check_budget(redis)
     assert redis.values["COST_SENSITIVE"] == "true"
