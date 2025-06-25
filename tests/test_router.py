@@ -1,5 +1,4 @@
 import importlib
-import types
 
 import pytest
 
@@ -27,9 +26,12 @@ class DummyCounter:
 def router(monkeypatch):
     dummy_counter = DummyCounter()
     monkeypatch.setattr(
-        importlib.import_module("prometheus_client"), "Counter", lambda *a, **k: dummy_counter
+        importlib.import_module("prometheus_client"),
+        "Counter",
+        lambda *a, **k: dummy_counter,
     )
-    module = importlib.reload(importlib.import_module("shared.utils.llm_router"))
+    import_module = importlib.import_module("shared.utils.llm_router")
+    module = importlib.reload(import_module)
     return module, dummy_counter
 
 
@@ -93,6 +95,7 @@ async def test_circuit_breaker(monkeypatch, router):
     assert counter.counts["deepseek"] == 1
 
     time_vals[0] = 121
+
     async def ok_gemini(messages, model="gemini-1.5-pro"):
         return {"ok": "gemini"}
 
@@ -100,4 +103,3 @@ async def test_circuit_breaker(monkeypatch, router):
 
     res = await module.route_llm("general", [], 10)
     assert res == {"ok": "gemini"}
-

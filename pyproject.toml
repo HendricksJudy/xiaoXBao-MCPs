@@ -13,12 +13,19 @@ httpx = "*"
 tenacity = "*"
 prometheus-client = "*"
 tiktoken = "*"
+apscheduler = "*"
+redis = "*"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "*"
 pytest-asyncio = "*"
 respx = "*"
+locust = "*"
+flake8 = "*"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"

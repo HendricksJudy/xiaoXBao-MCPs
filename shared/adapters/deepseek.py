@@ -15,7 +15,9 @@ ENCODING = tiktoken.get_encoding("cl100k_base")
 async def deepseek_chat(
     messages: list[dict], model: str = "deepseek-chat-v3-0324", **kwargs: Any
 ) -> dict:
-    token_count = sum(len(ENCODING.encode(m.get("content", ""))) for m in messages)  # noqa: E501
+    token_count = sum(
+        len(ENCODING.encode(m.get("content", ""))) for m in messages
+    )  # noqa: E501
     if token_count > TOKEN_LIMIT:
         raise ValueError("input exceeds 64k token limit")
 

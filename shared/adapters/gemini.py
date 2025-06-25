@@ -7,7 +7,7 @@ import tiktoken
 
 from shared.models.errors import LLMApiError
 
-API_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/{model}:streamGenerateContent"
+API_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/{model}:streamGenerateContent"  # noqa: E501
 TOKEN_LIMIT = 1_000_000
 CHUNK_TRIGGER = 512_000
 ENCODING = tiktoken.get_encoding("cl100k_base")
@@ -19,7 +19,9 @@ async def gemini_chat(
     tools: list | None = None,
     **kwargs: Any,
 ) -> dict:
-    token_count = sum(len(ENCODING.encode(m.get("content", ""))) for m in messages)
+    token_count = sum(
+        len(ENCODING.encode(m.get("content", ""))) for m in messages
+    )  # noqa: E501
     if token_count > TOKEN_LIMIT:
         raise ValueError("input exceeds 1M token limit")
 
@@ -42,13 +44,17 @@ async def gemini_chat(
             if 200 <= resp.status_code < 300:
                 return resp.json()
             if 400 <= resp.status_code < 500:
-                raise LLMApiError(code=resp.status_code, message=resp.text, vendor="gemini")
+                raise LLMApiError(
+                    code=resp.status_code, message=resp.text, vendor="gemini"
+                )
             if attempt == max_retries:
-                raise LLMApiError(code=resp.status_code, message=resp.text, vendor="gemini")
+                raise LLMApiError(
+                    code=resp.status_code, message=resp.text, vendor="gemini"
+                )
         except httpx.HTTPError as e:
             if attempt == max_retries:
                 raise LLMApiError(code=0, message=str(e), vendor="gemini")
-        wait = random.uniform(0, 2 ** attempt)
+        wait = random.uniform(0, 2**attempt)
         await asyncio.sleep(wait)
 
     raise LLMApiError(code=0, message="unknown error", vendor="gemini")

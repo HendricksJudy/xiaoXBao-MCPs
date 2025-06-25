@@ -1,0 +1,8 @@
+replicas: 1
+image:
+  repository: ghcr.io/org/myproject
+  tag: latest
+service:
+  type: ClusterIP
+ingress:
+  annotations: {}

@@ -18,6 +18,7 @@ class DummyEncoding:
 def _mock_tiktoken(monkeypatch):
     monkeypatch.setattr(tiktoken, "get_encoding", lambda name: DummyEncoding())
     import shared.adapters.gemini as gm
+
     importlib.reload(gm)
     return gm.gemini_chat
 
@@ -27,13 +28,14 @@ def _mock_tiktoken(monkeypatch):
 async def test_gemini_chat_success(_mock_tiktoken):
     gemini_chat = _mock_tiktoken
     route = respx.post(
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:streamGenerateContent"
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:streamGenerateContent"  # noqa: E501
     ).mock(return_value=httpx.Response(200, json={"ok": True}))
 
     result = await gemini_chat([{"role": "user", "content": "hi"}])
     assert result == {"ok": True}
     assert route.called
     import json
+
     payload = json.loads(route.calls[0].request.content.decode())
     assert payload["response_mime_type"] == "application/json"
 
@@ -43,12 +45,13 @@ async def test_gemini_chat_success(_mock_tiktoken):
 async def test_gemini_chat_chunk_upload(_mock_tiktoken):
     gemini_chat = _mock_tiktoken
     route = respx.post(
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:streamGenerateContent"
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:streamGenerateContent"  # noqa: E501
     ).mock(return_value=httpx.Response(200, json={}))
 
     long_text = "a" * 520_000
     await gemini_chat([{"role": "user", "content": long_text}])
     import json
+
     payload = json.loads(route.calls[0].request.content.decode())
     assert payload["enable_chunked_upload"] is True
 
@@ -58,7 +61,7 @@ async def test_gemini_chat_chunk_upload(_mock_tiktoken):
 async def test_gemini_chat_client_error(_mock_tiktoken):
     gemini_chat = _mock_tiktoken
     respx.post(
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:streamGenerateContent"
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:streamGenerateContent"  # noqa: E501
     ).mock(return_value=httpx.Response(400, json={"error": "bad"}))
 
     with pytest.raises(LLMApiError) as exc:
@@ -72,7 +75,7 @@ async def test_gemini_chat_client_error(_mock_tiktoken):
 async def test_gemini_chat_server_error_retries(monkeypatch, _mock_tiktoken):
     gemini_chat = _mock_tiktoken
     respx.post(
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:streamGenerateContent"
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:streamGenerateContent"  # noqa: E501
     ).mock(side_effect=[httpx.Response(500, json={"error": "fail"})] * 5)
 
     sleeps = []
