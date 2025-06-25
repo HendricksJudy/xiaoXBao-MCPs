@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "my_project"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "*"
+uvicorn = {extras = ["standard"], version = "*"}
+pydantic = "*"
+httpx = "*"
+tenacity = "*"
+prometheus-client = "*"
+tiktoken = "*"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "*"
+pytest-asyncio = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
