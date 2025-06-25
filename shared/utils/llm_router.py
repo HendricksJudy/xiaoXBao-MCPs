@@ -1,13 +1,13 @@
 import time
-from typing import Any
 
 from prometheus_client import Counter
 
 from shared.adapters.deepseek import deepseek_chat
 from shared.adapters.gemini import gemini_chat
 
-
-llm_calls_total = Counter("llm_calls_total", "Total number of LLM calls", ["vendor"])
+llm_calls_total = Counter(
+    "llm_calls_total", "Total number of LLM calls", ["vendor"]
+)  # noqa: E501
 
 _BREAKER = {
     "gemini": {"failures": 0, "until": 0.0},
@@ -58,4 +58,3 @@ async def route_llm(
         raise
     finally:
         llm_calls_total.labels(vendor=vendor).inc()
-

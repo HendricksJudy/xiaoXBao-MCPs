@@ -10,6 +10,9 @@ class DummyEncoding:
     def encode(self, text: str):
         return list(text)
 
+    def decode(self, tokens):
+        return "".join(tokens)
+
 
 tiktoken.get_encoding = lambda name: DummyEncoding()
 
