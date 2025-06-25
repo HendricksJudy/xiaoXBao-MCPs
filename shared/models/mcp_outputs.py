@@ -12,7 +12,10 @@ class PsychologyResponse(BaseModel):
 class OncologyKBResponse(BaseModel):
     """Response schema for the OncologyKB MCP."""
 
-    result: str | None = None
+    answer: str | None = None
+    citations: list[str] | None = None
+    evidence_level: str | None = None
+    update_timestamp: str | None = None
 
     model_config = ConfigDict(extra="forbid")
 
@@ -20,7 +23,11 @@ class OncologyKBResponse(BaseModel):
 class RadiologyResponse(BaseModel):
     """Response schema for the Radiology MCP."""
 
-    result: str | None = None
+    findings: str | None = None
+    impression: str | None = None
+    follow_up: str | None = None
+    modalities_detected: list[str] | None = None
+    uncertainty_flags: list[str] | None = None
 
     model_config = ConfigDict(extra="forbid")
 
@@ -28,6 +35,8 @@ class RadiologyResponse(BaseModel):
 class VisionResponse(BaseModel):
     """Response schema for the Vision MCP."""
 
-    result: str | None = None
+    labels: list[dict] | None = None
+    bbox: list | None = None
+    nsfw_flag: bool | None = None
 
     model_config = ConfigDict(extra="forbid")
