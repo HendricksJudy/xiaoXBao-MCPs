@@ -27,3 +27,7 @@ Useful make targets:
 - `make run` – start the API gateway
 
 Environment variables are loaded from `DEEPSEEK_API_KEY` and `GEMINI_API_KEY`.
+
+## License
+
+This project is licensed under the [GNU General Public License v3.0](LICENSE).
